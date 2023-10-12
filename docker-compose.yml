@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: saleshistory_container
+    environment:
+      MYSQL_DATABASE: anu_database 
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 12345678
+    ports:
+      - "3306:3306"
+    networks:
+      - ola_network
+
+
+  springboot:
+    build: .
+    container_name: saleshistory
+    ports:
+      - "8978:8978"
+    depends_on:
+      - mysql
+    networks:
+      - ola_network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://anu-database.cj9rshqboeoo.us-west-1.rds.amazonaws.com:3306/anu_database
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 12345678
+
+networks:
+  ola_network:
+    driver: bridge
